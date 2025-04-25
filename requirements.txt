@@ -1,7 +1,9 @@
 fastapi
 uvicorn[standard]
 python-nmap
-zapv2
+python-owasp-zap-v2   # was zapv2
 xmltodict
 jinja2
 sendgrid
+python-dotenv
+xsstrike
