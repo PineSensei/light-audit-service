@@ -1,0 +1,21 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Env files
+.env
+
+# Reports & outputs
+out/
+report.html
+report.pdf
+nmap.xml
+testssl.json
+
+# Static assets
+/static/logo.png
+
+# OS / Editor files
+.DS_Store
+.vscode/
