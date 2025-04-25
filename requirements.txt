@@ -1,0 +1,7 @@
+fastapi
+uvicorn[standard]
+python-nmap
+zapv2
+xmltodict
+jinja2
+sendgrid
