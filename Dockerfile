@@ -1,10 +1,10 @@
-# 1) Use OWASP ZAP’s official image so zap.sh is available
-FROM owasp/zap2docker-stable:latest
+# 1) Use the new stable ZAP image so zap.sh is present
+FROM zaproxy/zap-stable:latest
 
-# 2) Switch to root to install Python & tools
+# 2) Switch to root to install Python & our other tools
 USER root
 
-# 3) Install Python3, pip, build tools, and your OSS scanners
+# 3) Install Python, build tools, and scanners
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
       python3 python3-pip python3-dev build-essential libssl-dev libffi-dev \
@@ -23,18 +23,17 @@ RUN git clone https://github.com/sullo/nikto.git /opt/nikto && \
 RUN git clone https://github.com/drwetter/testssl.sh.git /opt/testssl.sh && \
     ln -s /opt/testssl.sh/testssl.sh /usr/local/bin/testssl.sh
 
-# 6) Upgrade pip and install Python dependencies
+# 6) Upgrade pip and install Python deps
 COPY requirements.txt /tmp/requirements.txt
 RUN pip3 install --upgrade pip setuptools wheel && \
     pip3 install --no-cache-dir -r /tmp/requirements.txt
 
-# 7) Copy your application code
+# 7) Copy your app
 WORKDIR /app
 COPY . /app
 
-# 8) Expose FastAPI port (ZAP listens on 8090 internally)
+# 8) Expose your FastAPI port
 EXPOSE 8080
 
-# 9) Launch ZAP in daemon mode, then start FastAPI
-#    We background zap.sh so the container stays alive and then run uvicorn
+# 9) Launch ZAP in daemon mode, then start Uvicorn
 CMD ["bash","-lc","zap.sh -daemon -host 0.0.0.0 -port ${ZAP_PORT:-8090} && uvicorn main:app --host 0.0.0.0 --port 8080"]
