@@ -18,19 +18,20 @@ RUN git clone https://github.com/sullo/nikto.git /opt/nikto && \
 RUN git clone https://github.com/drwetter/testssl.sh.git /opt/testssl.sh && \
     ln -s /opt/testssl.sh/testssl.sh /usr/local/bin/testssl.sh
 
-# Install subfinder (precompiled binary)
+# Pin and install subfinder v2.6.8 (precompiled binary)
+ENV SUBFINDER_VERSION=v2.6.8
 RUN wget -qO /tmp/subfinder.tgz \
-     https://github.com/projectdiscovery/subfinder/releases/latest/download/subfinder-linux-amd64.tar.gz && \
-    tar -xz -C /usr/local/bin -f /tmp/subfinder.tgz subfinder && \
+     https://github.com/projectdiscovery/subfinder/releases/download/${SUBFINDER_VERSION}/subfinder_${SUBFINDER_VERSION}_linux_amd64.tar.gz && \
+    tar -xz --strip-components=1 -C /usr/local/bin -f /tmp/subfinder.tgz subfinder && \
     rm /tmp/subfinder.tgz
 
-# Install nuclei (precompiled binary)
+# Install nuclei (precompiled binary, latest)
 RUN wget -qO /tmp/nuclei.tgz \
      https://github.com/projectdiscovery/nuclei/releases/latest/download/nuclei-linux-amd64.tar.gz && \
     tar -xz -C /usr/local/bin -f /tmp/nuclei.tgz nuclei && \
     rm /tmp/nuclei.tgz
 
-# Set working directory
+# Working directory
 WORKDIR /app
 
 # Copy and install Python dependencies
@@ -40,9 +41,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY . .
 
-# Expose the FastAPI port
+# Expose FastAPI port
 EXPOSE 8080
 
-# Launch ZAP (daemon) then start the FastAPI app
+# Start ZAP in daemon mode, then launch the FastAPI app
 CMD zap.sh -daemon -host 0.0.0.0 -port ${ZAP_PORT:-8090} && \
     uvicorn main:app --host 0.0.0.0 --port 8080
