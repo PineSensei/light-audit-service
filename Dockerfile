@@ -38,4 +38,5 @@ COPY . /app
 EXPOSE 8080
 
 # 9) Entry point: start ZAP then Uvicorn from our venv
-CMD ["bash","-lc","zap.sh -daemon -host 0.0.0.0 -port ${ZAP_PORT:-8090} & uvicorn main:app --host 0.0.0.0 --port 8080"]
++CMD ["bash","-c","zap.sh -daemon -host 0.0.0.0 -port ${ZAP_PORT:-8090} & /opt/venv/bin/uvicorn main:app --host 0.0.0.0 --port 8080"]
+
