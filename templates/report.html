@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Audit Report – {{ url }}</title>
+</head>
+<body>
+  <img src="{{ logo_path }}" alt="{{ brand }} logo" width="200"/>
+  <h1>Security Audit for {{ url }}</h1>
+  <p><strong>Date:</strong> {{ date }}</p>
+
+  <h2>1. Subdomains</h2>
+  <pre>{{ subdomains }}</pre>
+
+  <h2>2. Open Ports (nmap)</h2>
+  <pre>{{ nmap }}</pre>
+
+  <h2>3. SSL/TLS Configuration (testssl)</h2>
+  <pre>{{ testssl | tojson(indent=2) }}</pre>
+
+  <h2>4. WAF Detection</h2>
+  <pre>{{ waf }}</pre>
+
+  <h2>5. Content Discovery (ffuf)</h2>
+  <pre>{{ ffuf | tojson(indent=2) }}</pre>
+
+  <h2>6. CMS Scan (WPScan)</h2>
+  <pre>{{ wpscan | tojson(indent=2) }}</pre>
+
+  <h2>7. Known CVEs (nuclei)</h2>
+  <pre>{{ nuclei | tojson(indent=2) }}</pre>
+
+  <h2>8. Server Misconfigs (Nikto)</h2>
+  <pre>{{ nikto }}</pre>
+
+  <h2>9. DAST (ZAP)</h2>
+  {{ zap | safe }}
+
+  <h2>10. SQL Injection (sqlmap)</h2>
+  <pre>{{ sqlmap }}</pre>
+
+  <h2>11. XSS Testing (XSStrike)</h2>
+  <pre>{{ xsstrike }}</pre>
+</body>
+</html>
